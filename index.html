@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Design Patterns Catalog & Tutorials</title>
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Glow Accents -->
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+
+  <!-- Header / Navigation -->
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <i data-lucide="cpu" class="logo-icon"></i>
+        <span>ADP Studio</span>
+      </div>
+      <nav>
+        <a href="#illustrations" class="nav-link">Interactive Flows</a>
+        <a href="#catalog" class="nav-link">Pattern Catalog</a>
+        <a href="https://github.com/Anteneh-T-Tessema/AIDesignPatterns" target="_blank" class="github-btn">
+          <i data-lucide="github"></i> GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-container">
+      <h1 class="hero-title">Agentic Design <span class="gradient-text">Patterns</span></h1>
+      <p class="hero-subtitle">
+        A comprehensive collection of 21 foundational AI agent design patterns implemented natively from first principles using local LLMs.
+      </p>
+      <div class="hero-actions">
+        <a href="#illustrations" class="btn btn-primary">Explore Interactive Flows</a>
+        <a href="#catalog" class="btn btn-secondary">Browse 21 Patterns</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Illustrations / Diagrams Section -->
+  <section id="illustrations" class="illustrations">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Interactive Sandbox</span>
+        <h2>How Agentic Patterns Work</h2>
+        <p>Step through interactive visual guides of the two signature patterns built in this codebase.</p>
+      </div>
+
+      <!-- Tab Switchers -->
+      <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('prioritization')">
+          <i data-lucide="list-todo"></i> Task Prioritization & Self-Correction
+        </button>
+        <button class="tab-btn" onclick="switchTab('discovery')">
+          <i data-lucide="microscope"></i> Exploration & Discovery (Co-Scientist)
+        </button>
+      </div>
+
+      <!-- Tab Panel: Prioritization -->
+      <div id="panel-prioritization" class="tab-panel active">
+        <div class="illustration-layout">
+          <!-- Interactive Diagram View -->
+          <div class="diagram-canvas">
+            <div class="svg-container">
+              <svg viewBox="0 0 800 400" width="100%" height="100%" id="svg-prioritization">
+                <!-- Grid Lines -->
+                <defs>
+                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+
+                <!-- Nodes -->
+                <!-- Step 1: User Request -->
+                <g id="p-node-1" class="node-group" onclick="showPrioritizationStep(0)">
+                  <rect x="50" y="160" width="140" height="80" rx="10" class="node-rect" />
+                  <text x="120" y="195" text-anchor="middle" class="node-title">1. User Prompt</text>
+                  <text x="120" y="218" text-anchor="middle" class="node-desc">"Create urgent task"</text>
+                </g>
+
+                <!-- Connection 1 -> 2 -->
+                <line x1="190" y1="200" x2="250" y2="200" class="conn-line" />
+                <polygon points="250,200 242,195 242,205" class="conn-arrow" />
+
+                <!-- Step 2: Task Creator -->
+                <g id="p-node-2" class="node-group" onclick="showPrioritizationStep(1)">
+                  <rect x="250" y="160" width="140" height="80" rx="10" class="node-rect" />
+                  <text x="320" y="195" text-anchor="middle" class="node-title">2. Creator Agent</text>
+                  <text x="320" y="218" text-anchor="middle" class="node-desc">Spawns TASK-001</text>
+                </g>
+
+                <!-- Connection 2 -> 3 -->
+                <line x1="390" y1="200" x2="450" y2="200" class="conn-line" />
+                <polygon points="450,200 442,195 442,205" class="conn-arrow" />
+
+                <!-- Step 3: Self-Correction Loop / Evaluator -->
+                <g id="p-node-3" class="node-group" onclick="showPrioritizationStep(2)">
+                  <rect x="450" y="160" width="140" height="80" rx="10" class="node-rect" />
+                  <text x="520" y="195" text-anchor="middle" class="node-title">3. Evaluator Loop</text>
+                  <text x="520" y="218" text-anchor="middle" class="node-desc">Checks attributes</text>
+                </g>
+
+                <!-- Self-Correction Feedback Loop Line (Curved Arrow 3 -> 2) -->
+                <path d="M 520,160 Q 385,80 320,160" class="conn-line loop-line" id="p-loop-line" />
+                <polygon points="320,160 321,150 328,157" class="conn-arrow loop-arrow" id="p-loop-arrow" />
+                <text x="420" y="105" text-anchor="middle" class="loop-text">Self-Correction Feedback (if incomplete)</text>
+
+                <!-- Connection 3 -> 4 -->
+                <line x1="590" y1="200" x2="650" y2="200" class="conn-line" />
+                <polygon points="650,200 642,195 642,205" class="conn-arrow" />
+
+                <!-- Step 4: Finished Output -->
+                <g id="p-node-4" class="node-group" onclick="showPrioritizationStep(3)">
+                  <rect x="650" y="160" width="120" height="80" rx="10" class="node-rect node-rect-final" />
+                  <text x="710" y="195" text-anchor="middle" class="node-title font-highlight">4. Sorted Board</text>
+                  <text x="710" y="218" text-anchor="middle" class="node-desc">TASK-001 (P0)</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <!-- Sidebar Step Description -->
+          <div class="diagram-info">
+            <div class="info-card">
+              <h3 id="p-step-title">1. User Prompt Input</h3>
+              <p id="p-step-body" class="info-body">
+                The user provides a high-level unstructured text command, such as: <em>"Add an urgent login system setup and assign to Worker B."</em> The system processes this text request to begin parsing parameters.
+              </p>
+              <div class="step-navigation">
+                <button class="step-btn" onclick="prevPrioritizationStep()"><i data-lucide="arrow-left"></i> Previous</button>
+                <button class="step-btn" onclick="nextPrioritizationStep()">Next <i data-lucide="arrow-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel: Discovery -->
+      <div id="panel-discovery" class="tab-panel">
+        <div class="illustration-layout">
+          <!-- Interactive Diagram View -->
+          <div class="diagram-canvas">
+            <div class="svg-container">
+              <svg viewBox="0 0 800 400" width="100%" height="100%" id="svg-discovery">
+                <rect width="100%" height="100%" fill="url(#grid)" />
+
+                <!-- Nodes -->
+                <!-- Step 1: Research Question -->
+                <g id="d-node-1" class="node-group" onclick="showDiscoveryStep(0)">
+                  <rect x="40" y="160" width="100" height="80" rx="10" class="node-rect" />
+                  <text x="90" y="195" text-anchor="middle" class="node-title">1. Research Topic</text>
+                  <text x="90" y="218" text-anchor="middle" class="node-desc">Battery/Plastics</text>
+                </g>
+
+                <!-- Connection 1 -> 2 -->
+                <line x1="140" y1="200" x2="190" y2="200" class="conn-line" />
+                <polygon points="190,200 182,195 182,205" class="conn-arrow" />
+
+                <!-- Step 2: Ideator Generator -->
+                <g id="d-node-2" class="node-group" onclick="showDiscoveryStep(1)">
+                  <rect x="190" y="160" width="100" height="80" rx="10" class="node-rect" />
+                  <text x="240" y="195" text-anchor="middle" class="node-title">2. Ideation</text>
+                  <text x="240" y="218" text-anchor="middle" class="node-desc">Generates [H1-H3]</text>
+                </g>
+
+                <!-- Connection 2 -> 3 (Split into 3 review tracks) -->
+                <path d="M 290,200 L 340,100" class="conn-line" />
+                <path d="M 290,200 L 340,200" class="conn-line" />
+                <path d="M 290,200 L 340,300" class="conn-line" />
+                <polygon points="340,100 332,97 334,106" class="conn-arrow" />
+                <polygon points="340,200 332,195 332,205" class="conn-arrow" />
+                <polygon points="340,300 334,294 332,303" class="conn-arrow" />
+
+                <!-- Step 3: Peer Review (3 Reviewer nodes) -->
+                <!-- Reviewer 1 (Experimentation) -->
+                <g id="d-node-3-1" class="node-group" onclick="showDiscoveryStep(2)">
+                  <rect x="340" y="60" width="130" height="60" rx="8" class="node-rect" />
+                  <text x="405" y="95" text-anchor="middle" class="node-title-sub">Experimentation Rev.</text>
+                </g>
+                <!-- Reviewer 2 (Field Impact) -->
+                <g id="d-node-3-2" class="node-group" onclick="showDiscoveryStep(2)">
+                  <rect x="340" y="170" width="130" height="60" rx="8" class="node-rect" />
+                  <text x="405" y="205" text-anchor="middle" class="node-title-sub">Field Impact Rev.</text>
+                </g>
+                <!-- Reviewer 3 (Scientific Novelty) -->
+                <g id="d-node-3-3" class="node-group" onclick="showDiscoveryStep(2)">
+                  <rect x="340" y="280" width="130" height="60" rx="8" class="node-rect" />
+                  <text x="405" y="315" text-anchor="middle" class="node-title-sub">Scientific Novelty Rev.</text>
+                </g>
+
+                <!-- Connections 3 -> 4 (Merge to Tournament) -->
+                <path d="M 470,90 L 520,200" class="conn-line" />
+                <path d="M 470,200 L 520,200" class="conn-line" />
+                <path d="M 470,310 L 520,200" class="conn-line" />
+                <polygon points="520,200 512,194 514,204" class="conn-arrow" />
+
+                <!-- Step 4: Tournament Ranker -->
+                <g id="d-node-4" class="node-group" onclick="showDiscoveryStep(3)">
+                  <rect x="520" y="160" width="100" height="80" rx="10" class="node-rect" />
+                  <text x="570" y="195" text-anchor="middle" class="node-title">4. Tournament</text>
+                  <text x="570" y="218" text-anchor="middle" class="node-desc">Elo Debate & Rank</text>
+                </g>
+
+                <!-- Connection 4 -> 5 -->
+                <line x1="620" y1="200" x2="670" y2="200" class="conn-line" />
+                <polygon points="670,200 662,195 662,205" class="conn-arrow" />
+
+                <!-- Step 5: Evolution & Synthesis -->
+                <g id="d-node-5" class="node-group" onclick="showDiscoveryStep(4)">
+                  <rect x="670" y="160" width="100" height="80" rx="10" class="node-rect node-rect-final" />
+                  <text x="720" y="195" text-anchor="middle" class="node-title font-highlight">5. Evolved Proposal</text>
+                  <text x="720" y="218" text-anchor="middle" class="node-desc">Professor Report</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <!-- Sidebar Step Description -->
+          <div class="diagram-info">
+            <div class="info-card">
+              <h3 id="d-step-title">1. Research Topic Input</h3>
+              <p id="d-step-body" class="info-body">
+                The pipeline begins with an open-ended research question or topic (e.g. <em>"Next-generation solid-state batteries that charge in under 5 minutes"</em>).
+              </p>
+              <div class="step-navigation">
+                <button class="step-btn" onclick="prevDiscoveryStep()"><i data-lucide="arrow-left"></i> Previous</button>
+                <button class="step-btn" onclick="nextDiscoveryStep()">Next <i data-lucide="arrow-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Patterns Catalog / Grid Section -->
+  <section id="catalog" class="catalog">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">21 Patterns</span>
+        <h2>Explore the Complete Catalog</h2>
+        <p>Filter patterns by category and view brief descriptions and run recipes.</p>
+      </div>
+
+      <!-- Categories Filter -->
+      <div class="filter-container">
+        <button class="filter-btn active" onclick="filterPatterns('all')">All Patterns</button>
+        <button class="filter-btn" onclick="filterPatterns('core')">Core & Flow</button>
+        <button class="filter-btn" onclick="filterPatterns('cognitive')">Cognitive Ops</button>
+        <button class="filter-btn" onclick="filterPatterns('agency')">Interaction & Tools</button>
+        <button class="filter-btn" onclick="filterPatterns('state')">State & Budgets</button>
+        <button class="filter-btn" onclick="filterPatterns('collab')">Collaboration</button>
+        <button class="filter-btn" onclick="filterPatterns('integrity')">Safety & Integrity</button>
+      </div>
+
+      <!-- Pattern Cards Grid -->
+      <div id="patterns-grid" class="patterns-grid">
+        <!-- Javascript will inject the cards here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-container">
+      <p>&copy; 2026 AIDesignPatterns Catalog. All rights reserved.</p>
+      <p>Built with Vanilla HTML/CSS/JS in study/designeng.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
