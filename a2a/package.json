@@ -1,0 +1,14 @@
+{
+  "name": "a2a-inter-agent-communication",
+  "version": "1.0.0",
+  "description": "Inter-Agent Communication (A2A) pattern — agent discovery, message protocol, and task negotiation",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "demo": "node index.js \"The future of quantum computing\""
+  },
+  "dependencies": {
+    "ollama": "^0.5.14"
+  }
+}

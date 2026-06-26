@@ -1,0 +1,13 @@
+{
+  "name": "reasoning-techniques",
+  "version": "1.0.0",
+  "description": "Reasoning Techniques pattern — Chain-of-Thought (CoT), Tree-of-Thoughts (ToT) with backtracking, and Self-Correction workflows",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ollama": "^0.5.14"
+  }
+}

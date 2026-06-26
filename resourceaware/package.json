@@ -1,0 +1,13 @@
+{
+  "name": "resource-aware-optimization",
+  "version": "1.0.0",
+  "description": "Resource-Aware Optimization pattern — monitoring, dynamic routing, adaptive pipelines, and rate-limit backoff",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ollama": "^0.5.14"
+  }
+}

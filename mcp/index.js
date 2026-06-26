@@ -1,0 +1,188 @@
+/**
+ * CLI Runner — Model Context Protocol Orchestrator
+ * 
+ * Demonstrates:
+ * 1. Spawning local MCP Server.
+ * 2. Performing the MCP JSON-RPC Handshake.
+ * 3. Discovering available resources and tools on the server.
+ * 4. Fetching policy resources to build system prompt context.
+ * 5. Leveraging Llama 3.2 to parse text and issue tool calls.
+ * 6. Executing tool calls on the server and returning findings to Ollama.
+ */
+
+import path from "path";
+import ollama from "ollama";
+import { McpClient } from "./client.js";
+
+// Paths
+const currentDir = path.dirname(new URL(import.meta.url).pathname);
+const serverScript = path.join(currentDir, "server.js");
+
+// Colors for terminal formatting
+const C_RESET = "\x1b[0m";
+const C_CLIENT = "\x1b[32m"; // Green for client action
+const C_SERVER = "\x1b[33m"; // Yellow/Orange for server action
+const C_RPC_OUT = "\x1b[34m"; // Blue for outgoing RPC
+const C_RPC_IN = "\x1b[35m"; // Magenta for incoming RPC
+const C_MODEL = "\x1b[36m"; // Cyan for model output
+const C_BOLD = "\x1b[1m";
+
+// Print raw JSON-RPC packets exchanged
+function tracePacket(packet, direction) {
+  const isOut = direction === "outgoing";
+  const color = isOut ? C_RPC_OUT : C_RPC_IN;
+  const arrow = isOut ? "--> [OUTGOING]" : "<-- [INCOMING]";
+  
+  console.log(`\n${color}${arrow} JSON-RPC 2.0${C_RESET}`);
+  console.log(`${color}${JSON.stringify(packet, null, 2)}${C_RESET}`);
+}
+
+async function main() {
+  console.log(`${C_BOLD}🚀 Starting Model Context Protocol (MCP) Orchestrator...${C_RESET}\n`);
+
+  const client = new McpClient(serverScript);
+  client.setTraceLogger(tracePacket);
+
+  // 1. Spawn Server and Start Streams
+  console.log(`${C_CLIENT}[Client] Launching MCP Server process...${C_RESET}`);
+  await client.start();
+
+  // 2. Perform Handshake
+  console.log(`${C_CLIENT}[Client] Performing Handshake (initialize)...${C_RESET}`);
+  const initResult = await client.initialize();
+  console.log(`${C_CLIENT}[Client] Handshake Complete! Server: ${initResult.serverInfo.name} (v${initResult.serverInfo.version})${C_RESET}\n`);
+
+  // 3. Discover Resources
+  console.log(`${C_CLIENT}[Client] Requesting Resource List...${C_RESET}`);
+  const resources = await client.listResources();
+  console.log(`${C_CLIENT}[Client] Discovered Resources:${C_RESET}`);
+  resources.forEach(res => {
+    console.log(`  - ${C_BOLD}${res.uri}${C_RESET} (${res.name}): ${res.description}`);
+  });
+  console.log();
+
+  // 4. Discover Tools
+  console.log(`${C_CLIENT}[Client] Requesting Tool List...${C_RESET}`);
+  const tools = await client.listTools();
+  console.log(`${C_CLIENT}[Client] Discovered Tools:${C_RESET}`);
+  tools.forEach(t => {
+    console.log(`  - ${C_BOLD}${t.name}${C_RESET}: ${t.description}`);
+  });
+  console.log();
+
+  // 5. Read context resource: Company Discount Policy
+  const policyUri = "resource://company_policy.md";
+  console.log(`${C_CLIENT}[Client] Fetching context resource: ${policyUri}...${C_RESET}`);
+  const contents = await client.readResource(policyUri);
+  const policyText = contents[0]?.text || "";
+  console.log(`\n--- ${C_BOLD}RESOURCE CONTENT (${policyUri})${C_RESET} ---`);
+  console.log(policyText);
+  console.log("------------------------------------------\n");
+
+  // 6. Define the system prompt and task
+  const userPrompt = "What is the final price of a $450 purchase for a VIP customer? Apply the discount tier first, then calculate the 8.5% sales tax on the discounted amount.";
+  console.log(`${C_CLIENT}[Client] Constructing Ollama payload and mapping MCP tools...${C_RESET}`);
+  
+  // Format discovered tools for Ollama schema
+  const ollamaTools = tools.map(t => ({
+    type: "function",
+    function: {
+      name: t.name,
+      description: t.description,
+      parameters: t.inputSchema
+    }
+  }));
+
+  const messages = [
+    {
+      role: "system",
+      content: `You are a helpful assistant. You have access to corporate context resources and calculator tools.
+Here is the context retrieved from the corporate server:
+---
+${policyText}
+---
+When the user asks you a pricing calculation, you MUST look up the correct discount percentage in the context, apply it to the purchase amount, and then calculate the sales tax on the remaining amount.
+Use the 'calculate' tool to verify all mathematical formulas. Do not attempt to compute arithmetic in your head.`
+    },
+    {
+      role: "user",
+      content: userPrompt
+    }
+  ];
+
+  // 7. Call Ollama model (llama3.2)
+  console.log(`${C_MODEL}[Model] Sending prompt to llama3.2...${C_RESET}`);
+  let response;
+  try {
+    response = await ollama.chat({
+      model: "llama3.2",
+      messages,
+      tools: ollamaTools
+    });
+  } catch (err) {
+    if (err.message.includes("connrefused") || err.message.includes("fetch failed")) {
+      throw new Error("Ollama connection failed. Please ensure 'ollama serve' is running and 'llama3.2' model is pulled.");
+    }
+    throw err;
+  }
+
+  // 8. Handle tool call requests if generated by the model (supports multi-turn)
+  let activeMessages = [...messages];
+  
+  while (response.message.tool_calls && response.message.tool_calls.length > 0) {
+    // Add the model's assistant response (containing the tool calls) to the thread
+    activeMessages.push(response.message);
+
+    for (const toolCall of response.message.tool_calls) {
+      const toolName = toolCall.function.name;
+      let toolArgs = toolCall.function.arguments;
+
+      // Handle stringified arguments (some Ollama runtimes return arguments as string instead of object)
+      if (typeof toolArgs === "string") {
+        try {
+          toolArgs = JSON.parse(toolArgs);
+        } catch (e) {
+          console.error("Failed to parse tool call arguments as JSON", e);
+        }
+      }
+
+      console.log(`\n${C_MODEL}[Model] Requests tool call: "${toolName}" with arguments: ${JSON.stringify(toolArgs)}${C_RESET}`);
+      console.log(`${C_CLIENT}[Client] Delegating tool execution to MCP Server...${C_RESET}`);
+
+      // Call MCP Server tool
+      const serverResult = await client.callTool(toolName, toolArgs);
+      const resultText = serverResult.content[0].text;
+
+      console.log(`${C_CLIENT}[Client] Server result received: "${resultText}"${C_RESET}`);
+      // Add the tool execution result to the thread
+      activeMessages.push({
+        role: "tool",
+        content: resultText,
+        name: toolName,
+        tool_call_id: toolCall.id
+      });
+    }
+
+    // Call Ollama again with the updated message list (including tool results)
+    console.log(`${C_MODEL}[Model] Resending messages with tool results to llama3.2...${C_RESET}`);
+    response = await ollama.chat({
+      model: "llama3.2",
+      messages: activeMessages,
+      tools: ollamaTools
+    });
+  }
+
+  // Print final synthesized response from the model
+  console.log(`\n${C_BOLD}🏆 Final Compiled Response:${C_RESET}`);
+  console.log(response.message.content);
+
+  // Clean up
+  console.log(`\n${C_CLIENT}[Client] Terminating MCP Server process...${C_RESET}`);
+  client.stop();
+  console.log(`${C_BOLD}Done!${C_RESET}`);
+}
+
+main().catch((err) => {
+  console.error(`\n❌ Error: ${err.message}`);
+  process.exit(1);
+});

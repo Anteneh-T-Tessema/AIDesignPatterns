@@ -1,0 +1,22 @@
+{
+  "name": "routing",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Routing agentic design pattern — Customer support ticket router using Ollama + Llama 3.2",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "route:billing": "node index.js tickets/billing-dispute.txt",
+    "route:technical": "node index.js tickets/technical-outage.txt",
+    "route:account": "node index.js tickets/account-locked.txt",
+    "route:general": "node index.js tickets/feature-request.txt",
+    "route:angry": "node index.js tickets/angry-cancellation.txt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ollama": "^0.6.3"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "knowledgeretrieval",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Knowledge Retrieval (RAG) agentic design pattern — vector semantic search using Ollama + nomic-embed-text + llama3.2",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ollama": "^0.6.3"
+  }
+}

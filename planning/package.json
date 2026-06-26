@@ -1,0 +1,22 @@
+{
+  "name": "planning",
+  "version": "1.0.0",
+  "description": "Agentic Design Pattern: Planning (Plan & Execute)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "plan:rl": "node index.js \"The importance of Reinforcement Learning in AI\" --save"
+  },
+  "keywords": [
+    "agentic",
+    "planning",
+    "ollama",
+    "llama3.2"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ollama": "^0.6.3"
+  }
+}

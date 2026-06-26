@@ -1,0 +1,13 @@
+{
+  "name": "humanintheloop",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Human-in-the-Loop agentic design pattern — interactive LLM agent using Ollama + Llama 3.2",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ollama": "^0.6.3"
+  }
+}

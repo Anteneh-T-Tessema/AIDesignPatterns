@@ -1,0 +1,8 @@
+node_modules/
+reports/
+Agentic-Design-Patterns.pdf
+*.txt
+.DS_Store
+.vscode/
+.gemini/
+.agents/
