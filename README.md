@@ -102,3 +102,44 @@ Every design pattern follows a similar execution pattern:
    ```bash
    node index.js "Your custom instruction here" [--save]
    ```
+
+---
+
+## 🧠 AI System Architect (Designing Agent)
+
+This repository includes a **System Architect Designing Agent** that accepts user prompts describing system requirements, maps them to optimal design patterns, and outputs structured implementational blueprints (including ASCII sequence diagrams and system prompt templates).
+
+You can use the Designing Agent in two formats:
+
+### 1. Terminal CLI Agent
+Install root dependencies and run the CLI agent directly:
+```bash
+npm install
+node designer.js "I want a multi-agent system that writes newsletters by searching docs, writing drafts, and requesting manager review."
+```
+
+### 2. Browser Sandbox UI
+You can open `index.html` in your browser. To allow the browser UI to call your local Ollama API directly, launch Ollama with CORS origins enabled:
+- **macOS / Linux**:
+  ```bash
+  OLLAMA_ORIGINS="*" ollama serve
+  ```
+- **Windows (Command Prompt)**:
+  ```cmd
+  set OLLAMA_ORIGINS=*
+  ollama serve
+  ```
+If Ollama is offline or CORS is blocked, the UI gracefully falls back to an offline architectural design preview.
+
+---
+
+## 📖 Usage as a Reference Catalog
+
+You can open `index.html` directly in your browser to browse, search, and filter the catalog.
+- Click on any **Pattern Card** in the explorer grid.
+- A **Reference Spec Modal** will open, presenting:
+  - **Execution Mechanics**: A step-by-step logical outline of how the loop executes.
+  - **Core Files**: Clickable links to trace the code implementation directly in the folder.
+  - **Logical Architecture**: ASCII data-flow diagrams.
+  - **Sample Reference Prompt**: The core prompt template used to configure the pattern.
+

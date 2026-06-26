@@ -66,6 +66,9 @@
         <button class="tab-btn" onclick="switchTab('discovery')">
           <i data-lucide="microscope"></i> Exploration & Discovery (Co-Scientist)
         </button>
+        <button class="tab-btn" onclick="switchTab('architect')">
+          <i data-lucide="sparkles"></i> AI System Architect
+        </button>
       </div>
 
       <!-- Tab Panel: Prioritization -->
@@ -238,6 +241,40 @@
                 <button class="step-btn" onclick="nextDiscoveryStep()">Next <i data-lucide="arrow-right"></i></button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Panel: System Architect Designing Agent -->
+      <div id="panel-architect" class="tab-panel">
+        <div class="architect-layout">
+          <div class="architect-input-panel">
+            <h3><i data-lucide="sparkles" class="panel-icon"></i> System Requirements</h3>
+            <p class="panel-subtitle">Describe the workflows, integrations, and capabilities you need for your AI agent system. The Designing Agent will select optimal design patterns and construct the system blueprint.</p>
+            <textarea id="architect-prompt-input" placeholder="e.g., I want an agent that receives customer support tickets, checks if they are spam, retrieves answers from a knowledge doc, drafts an email response, and asks for a manager's review before sending..."></textarea>
+            
+            <div class="architect-actions">
+              <button id="architect-run-btn" class="btn btn-primary" onclick="generateSystemDesign()">
+                <i data-lucide="sparkles"></i> Generate System Design
+              </button>
+            </div>
+            
+            <div class="cors-notice">
+              <i data-lucide="info" class="notice-icon"></i>
+              <span>Note: Connects to local Ollama on <code>http://localhost:11434</code>. To use this in browser, launch Ollama with CORS allowed: <code>OLLAMA_ORIGINS="*" ollama serve</code>. Otherwise, it will fall back to an offline blueprint preview.</span>
+            </div>
+          </div>
+          
+          <div class="architect-output-panel">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <span class="terminal-title">Designing Agent Output Console</span>
+            </div>
+            <pre id="architect-output" class="console-area">Waiting for requirements... Enter your prompt and click 'Generate System Design' above.</pre>
           </div>
         </div>
       </div>

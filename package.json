@@ -1,0 +1,12 @@
+{
+  "name": "ai-design-patterns-root",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Root project configuration for AI Design Patterns Studio",
+  "scripts": {
+    "design": "node designer.js"
+  },
+  "dependencies": {
+    "ollama": "^0.6.3"
+  }
+}
